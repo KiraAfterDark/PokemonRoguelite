@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class POKEMONROGUELITE_API UAttackData : public UDataAsset
 {
 	GENERATED_BODY()
