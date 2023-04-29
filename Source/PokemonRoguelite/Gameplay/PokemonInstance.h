@@ -12,7 +12,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class POKEMONROGUELITE_API UPokemonInstance final : public UObject
 {
 	GENERATED_BODY()
@@ -39,8 +39,8 @@ private:
 public:
 	UPokemonInstance();
 	
-	void Init(UPokemonData* D, int L, FStatBlock I);
-	void Init(const UPokemonInstanceData* InstanceData);
+	void Initialize(UPokemonData* D, int L, FStatBlock I);
+	void Initialize(const UPokemonInstanceData* InstanceData);
 
 	UHealth* GetHealth();
 	FStatBlock* GetStats();

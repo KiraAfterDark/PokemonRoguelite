@@ -31,3 +31,23 @@ UHealth* ABattlePokemon::GetHealth()
 	return Instance->GetHealth();
 }
 
+FName ABattlePokemon::GetName()
+{
+	return Instance->Name;
+}
+
+TArray<UAttackData*>* ABattlePokemon::GetAttacks()
+{
+	return &Instance->Attacks;
+}
+
+int ABattlePokemon::GetLevel()
+{
+	return Instance->Level;
+}
+
+FStatBlock* ABattlePokemon::GetStats()
+{
+	return Instance->GetStats();
+}
+

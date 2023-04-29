@@ -7,7 +7,16 @@
 #include "BattlePokemon.h"
 #include "BattleTrainers/BattleTrainer.h"
 #include "GameFramework/GameModeBase.h"
+#include "Ui/BattleUi.h"
 #include "BattleGameMode.generated.h"
+
+DECLARE_LOG_CATEGORY_EXTERN(LogPhase, Display, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogPhaseIntro, Display, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogPhasePrepare, Display, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogPhaseResolve, Display, All);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBattleActionSelectedDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUsePokemonDelegate);
 
 /**
  * 
@@ -47,20 +56,14 @@ public:
 	USceneComponent* PlayerContainer;
 
 	UPROPERTY(EditDefaultsOnly, Category="Containers")
-	USceneComponent* PlayerPokemonContainer;
-
-	UPROPERTY(EditDefaultsOnly, Category="Containers")
 	USceneComponent* EnemyContainer;
-
-	UPROPERTY(EditDefaultsOnly, Category="Containers")
-	USceneComponent* EnemyPokemonContainer;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UUserWidget> BattleUiWidget;
+	TSubclassOf<UBattleUi> BattleUiWidget;
 
 	UPROPERTY()
-	UUserWidget* BattleUi;
+	UBattleUi* BattleUi;
 
 	UPROPERTY(BlueprintReadOnly, Category="Player Trainer")
 	UTrainerInstance* PlayerTrainerInstance;
@@ -69,6 +72,16 @@ protected:
 	UTrainerInstance* EnemyTrainerInstance;
 	
 private:
+	FTimerHandle DelayTimerHandle;
+	FOnUsePokemonDelegate OnUsePokemonDelegate;
+
+	UPROPERTY()
+	TArray<UBattleAction*> BattleActions;
+	bool PlayerActionReady = false;
+	bool EnemyActionReady = false;
+
+	UPROPERTY()
+	TArray<UBattleAction*> RemainingActions;
 
 // Functions
 public:
@@ -76,6 +89,47 @@ public:
 protected:
 	virtual void BeginPlay() override;
 private:
-	ABattleTrainer* SetupTrainer(UTrainerInstance* Instance, TSubclassOf<ABattleTrainer> Controller, USceneComponent* Container) const;
-	
+	ABattleTrainer* SetupTrainer(UTrainerInstance* Instance, TSubclassOf<ABattleTrainer> Controller, USceneComponent* Container, ABattleTrainer* OpponentTrainer) const;
+
+	void DelayFunction(FTimerDelegate::TMethodPtr<ABattleGameMode> Callback, float Time, bool Loop);
+
+	// General Methods
+
+	// 1. Intro Phase
+	void StartIntroPhase();
+	void EnemyIntro();
+
+	UFUNCTION()
+	void FinishEnemyIntro(ABattlePokemon* Pokemon);
+	void PlayerIntro();
+
+	UFUNCTION()
+	void FinishPlayerIntro(ABattlePokemon* Pokemon);
+	void FinishIntroPhase();
+
+	// 2. Prepare Phase
+	void StartPreparePhase();
+
+	UFUNCTION()
+	void PlayerActionSelected(UBattleAction* BattleAction);
+
+	UFUNCTION()
+	void EnemyActionSelected(UBattleAction* BattleAction);
+	void CheckActions();
+	void FinishPreparePhase();
+
+	// 3. Resolve Phase
+	void StartResolvePhase();
+	TArray<UBattleAction*> SortBattleActions(TArray<UBattleAction*> BattleActions);
+	void ResolveNextAction();
+	void ResolveAction(UBattleAction* BattleAction);
+
+	UFUNCTION()
+	void ActionResolved(UBattleAction* BattleAction);
+	void EvaluateField();
+	void FinishResolveActions();
+
+	// Actions
+	// Attack Action
+	void PerformAttack(UAttackData Attack, ABattlePokemon* Attacker, ABattlePokemon* Defender);
 };

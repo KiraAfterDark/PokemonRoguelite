@@ -13,7 +13,7 @@ class POKEMONROGUELITE_API ABattlePokemon : public AActor
 {
 	GENERATED_BODY()
 
-public:
+protected:
 	UPROPERTY(BlueprintReadOnly)
 	UPokemonInstance* Instance;
 	
@@ -28,8 +28,15 @@ public:
 
 	void Initialize(UPokemonInstance* PokemonInstance);
 
+	FName GetName();
+
 	UFUNCTION(BlueprintCallable)
 	UHealth* GetHealth();
+
+	TArray<UAttackData*>* GetAttacks();
+
+	int GetLevel();
+	FStatBlock* GetStats();
 
 protected:
 	virtual void BeginPlay() override;

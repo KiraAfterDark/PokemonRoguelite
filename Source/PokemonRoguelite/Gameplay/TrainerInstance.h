@@ -30,4 +30,6 @@ public:
 
     UPaperSprite* GetBattleSprite() const;
     TArray<UPokemonInstance*> GetParty();
+
+    FName GetName();
 };

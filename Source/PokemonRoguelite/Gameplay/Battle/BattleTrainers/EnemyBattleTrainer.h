@@ -13,5 +13,7 @@ UCLASS()
 class POKEMONROGUELITE_API AEnemyBattleTrainer : public ABattleTrainer
 {
 	GENERATED_BODY()
-	
+
+public:
+    virtual void UsePokemon() override;
 };

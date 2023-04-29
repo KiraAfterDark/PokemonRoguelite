@@ -9,15 +9,27 @@
 /**
  * 
  */
+
+UENUM()
+enum EAttackCategory
+{
+	None,
+	Physical,
+	Special,
+};
+
 UCLASS(BlueprintType)
 class POKEMONROGUELITE_API UAttackData : public UDataAsset
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly, Category="Information")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Information")
 	FName Name = "Attack";
 
-	UPROPERTY(EditDefaultsOnly, Category="Stats")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Stats")
 	int Power = 100;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Category")
+	TEnumAsByte<EAttackCategory> AttackCategory;
 };

@@ -14,7 +14,7 @@ void UTrainerInstance::Init(UTrainerData* D)
     for (const auto PokemonInstanceData : Data->PartyData)
     {
         UPokemonInstance* Instance = NewObject<UPokemonInstance>();
-        Instance->Init(PokemonInstanceData);
+        Instance->Initialize(PokemonInstanceData);
         Party.Add(Instance);
     }
 }
@@ -27,4 +27,9 @@ UPaperSprite* UTrainerInstance::GetBattleSprite() const
 TArray<UPokemonInstance*> UTrainerInstance::GetParty()
 {
     return Party;
+}
+
+FName UTrainerInstance::GetName()
+{
+    return Data->Name;
 }

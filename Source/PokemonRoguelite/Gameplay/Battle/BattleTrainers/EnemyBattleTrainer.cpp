@@ -3,3 +3,9 @@
 
 #include "EnemyBattleTrainer.h"
 
+void AEnemyBattleTrainer::UsePokemon()
+{
+    Super::UsePokemon();
+
+    BattleUi->DisplayEnemyPokemonInfo(Pokemon);
+}
